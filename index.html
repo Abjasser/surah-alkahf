@@ -330,21 +330,22 @@
 
         /* Tafsir Panel */
         .tafsir-panel {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease, padding 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
+            display: none;
             background: var(--bg-secondary);
             border-radius: 12px;
-            border: 1px solid transparent;
-            opacity: 0;
+            border: 1px solid var(--border);
         }
 
         .tafsir-panel.open {
-            max-height: 600px;
+            display: block;
             padding: 20px 24px;
-            opacity: 1;
             margin: 8px 0 16px;
-            border-color: var(--border);
+            animation: tafsirFadeIn 0.3s ease;
+        }
+
+        @keyframes tafsirFadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .tafsir-header {
@@ -530,8 +531,6 @@
             html += '<div class="ayahs-container">';
             html += '<div class="ayah-flow">';
 
-            let tafsirHtml = '';
-
             ayahsData.forEach((ayah, i) => {
                 const num = ayah.numberInSurah;
                 let text = ayah.text;
@@ -556,8 +555,7 @@
 
                 html += `<span class="ayah-text" data-ayah="${num}" onclick="toggleTafsir(${num})">${text}</span>`;
                 html += `<span class="ayah-number" onclick="toggleTafsir(${num})">${toArabicIndic(num)}</span>`;
-
-                tafsirHtml += `<div class="tafsir-panel" id="tafsir-${num}">
+                html += `<div class="tafsir-panel" id="tafsir-${num}">
                     <div class="tafsir-header">
                         <span class="tafsir-label">📖 تفسير الآية ${toArabicIndic(num)}</span>
                         <button class="tafsir-close" onclick="toggleTafsir(${num})" aria-label="إغلاق التفسير">&times;</button>
@@ -567,7 +565,6 @@
             });
 
             html += '</div>'; // close ayah-flow
-            html += tafsirHtml;
             html += '</div>';
             content.innerHTML = html;
         }
