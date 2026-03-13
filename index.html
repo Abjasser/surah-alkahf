@@ -528,6 +528,9 @@
             html += '<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';
 
             html += '<div class="ayahs-container">';
+            html += '<div class="ayah-flow">';
+
+            let tafsirHtml = '';
 
             ayahsData.forEach((ayah, i) => {
                 const num = ayah.numberInSurah;
@@ -551,24 +554,20 @@
                     }
                 }
 
-                html += '<div class="ayah-block">';
-                html += '<div class="ayah-flow">';
                 html += `<span class="ayah-text" data-ayah="${num}" onclick="toggleTafsir(${num})">${text}</span>`;
                 html += `<span class="ayah-number" onclick="toggleTafsir(${num})">${toArabicIndic(num)}</span>`;
-                if (i < ayahsData.length - 1) {
-                    html += `<span class="separator"> ۝ </span>`;
-                }
-                html += '</div>';
-                html += `<div class="tafsir-panel" id="tafsir-${num}">
+
+                tafsirHtml += `<div class="tafsir-panel" id="tafsir-${num}">
                     <div class="tafsir-header">
                         <span class="tafsir-label">📖 تفسير الآية ${toArabicIndic(num)}</span>
                         <button class="tafsir-close" onclick="toggleTafsir(${num})" aria-label="إغلاق التفسير">&times;</button>
                     </div>
                     <div class="tafsir-text">${tafsirData[i] ? tafsirData[i].text : ''}</div>
                 </div>`;
-                html += '</div>';
             });
 
+            html += '</div>'; // close ayah-flow
+            html += tafsirHtml;
             html += '</div>';
             content.innerHTML = html;
         }
@@ -588,6 +587,7 @@
                 panel.classList.add('open');
                 if (ayahText) ayahText.classList.add('active');
                 openTafsirs.add(num);
+                setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
             }
         }
 
